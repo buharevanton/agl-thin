@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+
+  <title>Hello WebSocket</title>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="stomp.js"></script>
+<script type="text/javascript">
+
+
+        var stompClient = null;
+
+        function setConnected(connected) {
+            document.getElementById('connect').disabled = connected;
+            document.getElementById('disconnect').disabled = !connected;
+            document.getElementById('conversationDiv').style.visibility = connected ? 'visible' : 'hidden';
+            document.getElementById('response').innerHTML = '';
+        }
+
+        function connect() {
+            var socket = new SockJS('http://ecse005002ac.epam.com:8082/websocket/board');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function(frame) {
+                setConnected(true);
+                console.log('Connected: ' + frame.headers['user-name']);
+                stompClient.subscribe('/topic/websocket/board/bb5a33f7-f844-4384-8cb0-b79f057df5e1');
+            });
+        }
+
+        function disconnect() {
+            stompClient.disconnect();
+            setConnected(false);
+            console.log("Disconnected");
+        }
+
+        function sendName() {
+            var name = document.getElementById('name').value;
+            stompClient.send("/app/websocket/board/bb5a33f7-f844-4384-8cb0-b79f057df5e1", {}, JSON.stringify({
+  "action":"EDIT_STICKER",
+  "parameters":{
+     "text":"Task name111",
+      "columnId":"3"
+  },   "userId":"1"
+}));
+        }
+
+
+        function getList() {
+            var name = document.getElementById('name').value;
+            stompClient.send("/app/websocket/board/bb5a33f7-f844-4384-8cb0-b79f057df5e1", {}, JSON.stringify({
+  "action":"LIST_STICKER"
+}));
+        }
+
+        function showGreeting(message) {
+            var response = document.getElementById('response');
+            var p = document.createElement('p');
+            p.style.wordWrap = 'break-word';
+            p.appendChild(document.createTextNode(message));
+            response.appendChild(p);
+        }
+    </script>
+</head>
+<body>
+<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being enabled. Please enable
+    Javascript and reload this page!</h2></noscript>
+<div>
+    <div>
+        <button id="connect" onclick="connect();">Connect</button>
+        <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>
+    </div>
+    <div id="conversationDiv">
+        <label></label><input type="hidden" id="name" />
+        <button id="sendName" onclick="sendName();">Send</button>
+        <button id="sendName" onclick="getList();">getList</button>
+        <p id="response"></p>
+    </div>
+</div>
+</body>
+</html>
