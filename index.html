@@ -3,13 +3,14 @@
 <head>
 
 
-  <title>Hello WebSocket</title>
-<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
-<script src="stomp.js"></script>
-<script type="text/javascript">
+    <title>Hello WebSocket</title>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="stomp.js"></script>
+    <script type="text/javascript">
 
 
         var stompClient = null;
+        var boardId = "26bc6c52-b879-4fd9-8e61-e994d1de2f71";
 
         function setConnected(connected) {
             document.getElementById('connect').disabled = connected;
@@ -19,12 +20,13 @@
         }
 
         function connect() {
-            var socket = new SockJS('http://ecse005002ac.epam.com:8082/websocket/board');
+            // var socket = new SockJS('http://ecse005002ac.epam.com:8082/websocket/board');
+            var socket = new SockJS('http://localhost:8082/websocket/board');
             stompClient = Stomp.over(socket);
-            stompClient.connect({}, function(frame) {
+            stompClient.connect({}, function (frame) {
                 setConnected(true);
                 console.log('Connected: ' + frame.headers['user-name']);
-                stompClient.subscribe('/topic/websocket/board/bb5a33f7-f844-4384-8cb0-b79f057df5e1');
+                stompClient.subscribe(`/topic/websocket/board/${boardId}`);
             });
         }
 
@@ -34,23 +36,34 @@
             console.log("Disconnected");
         }
 
-        function sendName() {
+        function addSticker() {
             var name = document.getElementById('name').value;
-            stompClient.send("/app/websocket/board/bb5a33f7-f844-4384-8cb0-b79f057df5e1", {}, JSON.stringify({
-  "action":"EDIT_STICKER",
-  "parameters":{
-     "text":"Task name111",
-      "columnId":"3"
-  },   "userId":"1"
-}));
+            stompClient.send(`/app/websocket/board/${boardId}`, {}, JSON.stringify({
+                "action": "ADD_STICKER",
+                "parameters": {
+                    "text": "Task name111",
+                    "columnId": "3"
+                }, "userId": "1"
+            }));
         }
 
+        function updateSticker() {
+            var name = document.getElementById('name').value;
+            stompClient.send(`/app/websocket/board/${boardId}`, {}, JSON.stringify({
+                "action": "UPDATE_STICKER",
+                "parameters": {
+                    "stickerId": "1",
+                    "text": "edited text 222",
+                    "columnId": "3"
+                }, "userId": "1"
+            }));
+        }
 
         function getList() {
             var name = document.getElementById('name').value;
-            stompClient.send("/app/websocket/board/bb5a33f7-f844-4384-8cb0-b79f057df5e1", {}, JSON.stringify({
-  "action":"LIST_STICKER"
-}));
+            stompClient.send(`/app/websocket/board/${boardId}`, {}, JSON.stringify({
+                "action": "LIST_STICKER"
+            }));
         }
 
         function showGreeting(message) {
@@ -62,8 +75,10 @@
         }
     </script>
 </head>
+
 <body>
-<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being enabled. Please enable
+<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
+    enabled. Please enable
     Javascript and reload this page!</h2></noscript>
 <div>
     <div>
@@ -71,9 +86,10 @@
         <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>
     </div>
     <div id="conversationDiv">
-        <label></label><input type="hidden" id="name" />
-        <button id="sendName" onclick="sendName();">Send</button>
-        <button id="sendName" onclick="getList();">getList</button>
+        <label></label><input type="hidden" id="name"/>
+        <button id="add" onclick="addSticker();">Add sticker</button>
+        <button id="edit" onclick="updateSticker();">Update sticker</button>
+        <button id="get" onclick="getList();">getList</button>
         <p id="response"></p>
     </div>
 </div>
