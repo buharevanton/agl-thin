@@ -1,79 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-
     <title>Hello WebSocket</title>
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
     <script src="stomp.js"></script>
-    <script type="text/javascript">
-
-
-        var stompClient = null;
-        var boardId = "26bc6c52-b879-4fd9-8e61-e994d1de2f71";
-
-        function setConnected(connected) {
-            document.getElementById('connect').disabled = connected;
-            document.getElementById('disconnect').disabled = !connected;
-            document.getElementById('conversationDiv').style.visibility = connected ? 'visible' : 'hidden';
-            document.getElementById('response').innerHTML = '';
+    <style>
+        #conversationDiv {
+            margin-top: 10px;
         }
-
-        function connect() {
-            // var socket = new SockJS('http://ecse005002ac.epam.com:8082/websocket/board');
-            var socket = new SockJS('http://localhost:8082/websocket/board');
-            stompClient = Stomp.over(socket);
-            stompClient.connect({}, function (frame) {
-                setConnected(true);
-                console.log('Connected: ' + frame.headers['user-name']);
-                stompClient.subscribe(`/topic/websocket/board/${boardId}`);
-            });
-        }
-
-        function disconnect() {
-            stompClient.disconnect();
-            setConnected(false);
-            console.log("Disconnected");
-        }
-
-        function addSticker() {
-            var name = document.getElementById('name').value;
-            stompClient.send(`/app/websocket/board/${boardId}`, {}, JSON.stringify({
-                "action": "ADD_STICKER",
-                "parameters": {
-                    "text": "Task name111",
-                    "columnId": "3"
-                }, "userId": "1"
-            }));
-        }
-
-        function updateSticker() {
-            var name = document.getElementById('name').value;
-            stompClient.send(`/app/websocket/board/${boardId}`, {}, JSON.stringify({
-                "action": "UPDATE_STICKER",
-                "parameters": {
-                    "stickerId": "1",
-                    "text": "edited text 222",
-                    "columnId": "3"
-                }, "userId": "1"
-            }));
-        }
-
-        function getList() {
-            var name = document.getElementById('name').value;
-            stompClient.send(`/app/websocket/board/${boardId}`, {}, JSON.stringify({
-                "action": "LIST_STICKER"
-            }));
-        }
-
-        function showGreeting(message) {
-            var response = document.getElementById('response');
-            var p = document.createElement('p');
-            p.style.wordWrap = 'break-word';
-            p.appendChild(document.createTextNode(message));
-            response.appendChild(p);
-        }
-    </script>
+    </style>
 </head>
 
 <body>
@@ -81,6 +16,9 @@
     enabled. Please enable
     Javascript and reload this page!</h2></noscript>
 <div>
+    <label for="boardId">boardId</label>
+    <input id="boardId" type="text" size="60">
+    <hr>
     <div>
         <button id="connect" onclick="connect();">Connect</button>
         <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>
@@ -93,5 +31,72 @@
         <p id="response"></p>
     </div>
 </div>
+<script type="text/javascript">
+    let stompClient = null;
+    // const boardId = "26bc6c52-b879-4fd9-8e61-e994d1de2f71";
+    const boardId = document.getElementById('boardId').value;
+
+    function setConnected(connected) {
+        document.getElementById('connect').disabled = connected;
+        document.getElementById('disconnect').disabled = !connected;
+        document.getElementById('conversationDiv').style.visibility = connected ? 'visible' : 'hidden';
+        document.getElementById('response').innerHTML = '';
+    }
+
+    function connect() {
+        // var socket = new SockJS('http://ecse005002ac.epam.com:8082/websocket/board');
+        var socket = new SockJS('http://localhost:8082/websocket/board');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            setConnected(true);
+            console.log('Connected: ' + frame.headers['user-name']);
+            stompClient.subscribe(`/topic/websocket/board/${boardId}`);
+        });
+    }
+
+    function disconnect() {
+        stompClient.disconnect();
+        setConnected(false);
+        console.log("Disconnected");
+    }
+
+    function addSticker() {
+        var name = document.getElementById('name').value;
+        stompClient.send(`/app/websocket/board/${boardId}`, {}, JSON.stringify({
+            "action": "ADD_STICKER",
+            "parameters": {
+                "text": "Task name111",
+                "columnId": "3"
+            }, "userId": "1"
+        }));
+    }
+
+    function updateSticker() {
+        var name = document.getElementById('name').value;
+        stompClient.send(`/app/websocket/board/${boardId}`, {}, JSON.stringify({
+            "action": "UPDATE_STICKER",
+            "parameters": {
+                "stickerId": "1",
+                "text": "edited text 222",
+                "columnId": "3"
+            }, "userId": "1"
+        }));
+    }
+
+    function getList() {
+        var name = document.getElementById('name').value;
+        stompClient.send(`/app/websocket/board/${boardId}`, {}, JSON.stringify({
+            "action": "LIST_STICKER"
+        }));
+    }
+
+    function showGreeting(message) {
+        var response = document.getElementById('response');
+        var p = document.createElement('p');
+        p.style.wordWrap = 'break-word';
+        p.appendChild(document.createTextNode(message));
+        response.appendChild(p);
+    }
+</script>
 </body>
 </html>
