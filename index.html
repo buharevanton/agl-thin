@@ -27,17 +27,23 @@
         <button id="connect" onclick="connect();">Connect</button>
         <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>
     </div>
+    <hr>
     <div id="conversationDiv">
         <label></label><input type="hidden" id="name"/>
         <button id="add" onclick="addSticker();">Add sticker</button>
         <button id="edit" onclick="updateSticker();">Update sticker</button>
-        <button id="get" onclick="getList();">getList</button>
+        <button id="get" onclick="getListOfStickers();">get List of stickers</button>
         <button id="delete" onclick="deleteSticker();">deleteSticker</button>
         <p id="response"></p>
+    </div>
+    <hr>
+    <div>
+        <button onclick="addComment();">Add comment</button>
     </div>
 </div>
 <script type="text/javascript">
     let stompClient = null;
+
     // const boardId = "26bc6c52-b879-4fd9-8e61-e994d1de2f71";
     var boardId;
     var token;
@@ -92,16 +98,16 @@
     }
 
     function deleteSticker() {
-      var name = document.getElementById('name').value;
-      stompClient.send(`/app/websocket/board/${boardId}`, {}, JSON.stringify({
-"action":"DELETE_STICKER",
-"parameters":{
-"stickerId":1
-}
-}));
+        var name = document.getElementById('name').value;
+        stompClient.send(`/app/websocket/board/${boardId}`, {}, JSON.stringify({
+            "action": "DELETE_STICKER",
+            "parameters": {
+                "stickerId": 1
+            }
+        }));
     }
 
-    function getList() {
+    function getListOfStickers() {
         var name = document.getElementById('name').value;
         stompClient.send(`/app/websocket/board/${boardId}`, {}, JSON.stringify({
             "action": "LIST_STICKER"
@@ -114,6 +120,10 @@
         p.style.wordWrap = 'break-word';
         p.appendChild(document.createTextNode(message));
         response.appendChild(p);
+    }
+
+    function addComment() {
+
     }
 </script>
 </body>
