@@ -20,6 +20,9 @@
     <label for="boardId">boardId</label>
     <input id="boardId" type="text" size="60">
     <hr>
+    <label for="token">token</label>
+    <input id="token" type="text" size="160">
+    <hr>
     <div>
         <button id="connect" onclick="connect();">Connect</button>
         <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>
@@ -37,6 +40,7 @@
     let stompClient = null;
     // const boardId = "26bc6c52-b879-4fd9-8e61-e994d1de2f71";
     var boardId;
+    var token;
 
     function setConnected(connected) {
         document.getElementById('connect').disabled = connected;
@@ -49,8 +53,9 @@
         // var socket = new SockJS('http://ecse005002ac.epam.com:8082/websocket/board');
         var socket = new SockJS('http://localhost:8082/websocket/board');
         boardId = document.getElementById('boardId').value;
+        token = document.getElementById('token').value;
         stompClient = Stomp.over(socket);
-        stompClient.connect({}, function (frame) {
+        stompClient.connect(null, token, function (frame) {
             setConnected(true);
             console.log('Connected: ' + frame.headers['user-name']);
             stompClient.subscribe(`/topic/websocket/board/${boardId}`);
