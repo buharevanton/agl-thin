@@ -29,13 +29,14 @@
         <button id="add" onclick="addSticker();">Add sticker</button>
         <button id="edit" onclick="updateSticker();">Update sticker</button>
         <button id="get" onclick="getList();">getList</button>
+        <button id="delete" onclick="deleteSticker();">deleteSticker</button>
         <p id="response"></p>
     </div>
 </div>
 <script type="text/javascript">
     let stompClient = null;
     // const boardId = "26bc6c52-b879-4fd9-8e61-e994d1de2f71";
-    const boardId = document.getElementById('boardId').value;
+    var boardId;
 
     function setConnected(connected) {
         document.getElementById('connect').disabled = connected;
@@ -47,6 +48,7 @@
     function connect() {
         // var socket = new SockJS('http://ecse005002ac.epam.com:8082/websocket/board');
         var socket = new SockJS('http://localhost:8082/websocket/board');
+        boardId = document.getElementById('boardId').value;
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
             setConnected(true);
@@ -82,6 +84,16 @@
                 "columnId": "3"
             }, "userId": "1"
         }));
+    }
+
+    function deleteSticker() {
+      var name = document.getElementById('name').value;
+      stompClient.send(`/app/websocket/board/${boardId}`, {}, JSON.stringify({
+"action":"DELETE_STICKER",
+"parameters":{
+"stickerId":1
+}
+}));
     }
 
     function getList() {
