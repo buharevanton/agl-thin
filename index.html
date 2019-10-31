@@ -30,10 +30,10 @@
     <hr>
     <div id="conversationDiv">
         <label></label><input type="hidden" id="name"/>
-        <button id="add" onclick="addSticker();">Add sticker</button>
-        <button id="edit" onclick="updateSticker();">Update sticker</button>
-        <button id="get" onclick="getListOfStickers();">get List of stickers</button>
-        <button id="delete" onclick="deleteSticker();">deleteSticker</button>
+        <button id="loadBoard" onclick="loadBoard();">Load Board</button>
+        <button id="addSticker" onclick="addSticker();">Add sticker</button>
+        <button id="editSticker" onclick="updateSticker();">Update sticker</button>
+        <button id="deleteSticker" onclick="deleteSticker();">Delete Sticker</button>
         <p id="response"></p>
     </div>
     <hr>
@@ -103,14 +103,14 @@
             "action": "DELETE_STICKER",
             "parameters": {
                 "stickerId": 1
-            }
+            }, "userId": 1
         }));
     }
 
-    function getListOfStickers() {
+    function loadBoard() {
         var name = document.getElementById('name').value;
         stompClient.send(`/app/websocket/board/${boardId}`, {}, JSON.stringify({
-            "action": "LIST_STICKER"
+            "action": "LOAD_BOARD"
         }));
     }
 
