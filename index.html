@@ -35,12 +35,11 @@
         <button id="editSticker" onclick="updateSticker();">Update sticker</button>
         <button id="deleteSticker" onclick="deleteSticker();">Delete Sticker</button>
         <p id="response"></p>
-    </div>
-    <hr>
-    <div>
+        <hr>
         <button onclick="addComment();">Add comment</button>
     </div>
 </div>
+
 <script type="text/javascript">
     let stompClient = null;
 
@@ -123,8 +122,17 @@
     }
 
     function addComment() {
-
+        var name = document.getElementById('name').value;
+        stompClient.send(`/app/websocket/board/${boardId}`, {}, JSON.stringify({
+            "action": "ADD_COMMENT",
+            "parameters": {
+                "text": "Task name111",
+                "stickerId": "3",
+                "ownerId": "1"
+            }, "userId": "1"
+        }));
     }
+
 </script>
 </body>
 </html>
