@@ -37,6 +37,7 @@
         <p id="response"></p>
         <hr>
         <button onclick="addComment();">Add comment</button>
+        <button onclick="updateComment();">Update comment</button>
     </div>
 </div>
 
@@ -130,6 +131,17 @@
                 "stickerId": "3",
                 "ownerId": "1"
             }, "userId": "1"
+        }));
+    }
+
+    function updateComment() {
+        var name = document.getElementById('name').value;
+        stompClient.send(`/app/websocket/board/${boardId}`, {}, JSON.stringify({
+            "action": "UPDATE_COMMENT",
+            "parameters": {
+                "commentId": 1,
+                "text": "updatedText"
+              }, "userId": 1
         }));
     }
 
