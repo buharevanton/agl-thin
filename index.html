@@ -9,6 +9,11 @@
         #conversationDiv {
             margin-top: 10px;
         }
+        #register {
+            color: blueviolet;
+            background-color: ghostwhite;
+            height: 30px;
+        }
     </style>
 </head>
 
@@ -17,6 +22,8 @@
     enabled. Please enable
     Javascript and reload this page!</h2></noscript>
 <div>
+    <button id="register" onclick="register();">Register and Create Board</button>
+    <hr>
     <label for="boardId">boardId</label>
     <input id="boardId" type="text" size="60">
     <hr>
@@ -43,10 +50,46 @@
 
 <script type="text/javascript">
     let stompClient = null;
+    let accessToken;
+    let boardId;
+    let token;
 
-    // const boardId = "26bc6c52-b879-4fd9-8e61-e994d1de2f71";
-    var boardId;
-    var token;
+    async function register() {
+        const response = await fetch('http://localhost:8082/temporary-registration',{
+            method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({"firstName": "user"})
+        });
+        const responseJson = await response.json();
+        accessToken = responseJson.accessToken;
+        console.log("Temporary registration done. accessToken:");
+        console.log(accessToken);
+
+        const randomBoardName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);;
+        const response2 = await fetch('http://localhost:8082/board',{
+            method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({"title": randomBoardName})
+        });
+
+        const responseJson2 = await response2.json();
+        boardId = responseJson2.id;
+
+        console.log("Board created: " + boardId);
+        document.getElementById('boardId').value = boardId;
+    }
+
 
     function setConnected(connected) {
         document.getElementById('connect').disabled = connected;
