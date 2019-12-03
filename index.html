@@ -63,7 +63,7 @@
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({"firstName": "user"})
+            body: JSON.stringify({"firstName": "user1"})
         });
         const responseJson = await response.json();
         accessToken = responseJson.accessToken;
@@ -104,10 +104,12 @@
         boardId = document.getElementById('boardId').value;
         token = document.getElementById('token').value;
         stompClient = Stomp.over(socket);
-        stompClient.connect(null, token, function (frame) {
+        stompClient.connect(null, accessToken, function (frame) {
             setConnected(true);
             console.log('Connected: ' + frame.headers['user-name']);
+            stompClient.subscribe(`/user/user1/topic/websocket/board/${boardId}`);
             stompClient.subscribe(`/topic/websocket/board/${boardId}`);
+
         });
     }
 
@@ -123,8 +125,8 @@
             "action": "ADD_STICKER",
             "parameters": {
                 "text": "Task name111",
-                "columnId": "3"
-            }, "userId": "1"
+                "columnId": 3
+            }
         }));
     }
 
@@ -133,10 +135,10 @@
         stompClient.send(`/app/websocket/board/${boardId}`, {}, JSON.stringify({
             "action": "UPDATE_STICKER",
             "parameters": {
-                "stickerId": "1",
+                "stickerId": 4,
                 "text": "edited text 222",
-                "columnId": "3"
-            }, "userId": "1"
+                "columnId": 3
+            }
         }));
     }
 
@@ -146,7 +148,7 @@
             "action": "DELETE_STICKER",
             "parameters": {
                 "stickerId": 1
-            }, "userId": 1
+            }
         }));
     }
 
@@ -171,9 +173,9 @@
             "action": "ADD_COMMENT",
             "parameters": {
                 "text": "Task name111",
-                "stickerId": "3",
-                "ownerId": "1"
-            }, "userId": "1"
+                "stickerId": 3,
+                "ownerId": 1
+            }
         }));
     }
 
@@ -184,7 +186,7 @@
             "parameters": {
                 "commentId": 1,
                 "text": "updatedText"
-              }, "userId": 1
+              }
         }));
     }
 
