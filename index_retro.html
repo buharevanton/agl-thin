@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hello WebSocket</title>
+    <title>Retro Agiles</title>
     <link rel="shortcut icon" href="favicon.ico">
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
     <script src="stomp.js"></script>
@@ -24,7 +24,7 @@
 <div>
     <button id="register" onclick="register();">Register and Create Board</button>
     <hr>
-    <label for="boardId">boardId</label>
+    <label for="boardId">roomId</label>
     <input id="boardId" type="text" size="60">
     <hr>
     <label for="token">token</label>
@@ -51,7 +51,7 @@
 <script type="text/javascript">
     let stompClient = null;
     let accessToken;
-    let boardId;
+    let roomId;
     let token;
 
     async function register() {
