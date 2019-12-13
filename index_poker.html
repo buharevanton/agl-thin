@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>Poker Agiles</title>
     <link rel="shortcut icon" href="favicon.ico">
-    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
-    <script src="stomp.js"></script>
+<!--    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>-->
+    <script src="js/sockjs.min.js"></script>
+    <script src="js/stomp.js"></script>
     <style>
         #conversationDiv {
             margin-top: 10px;
@@ -65,8 +66,8 @@
         console.log("Temporary registration done. accessToken:");
         console.log(accessToken);
 
-        const randomBoardName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);;
-        const response2 = await fetch('http://localhost:8081/board',{
+        const randomRoomName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        const response2 = await fetch('http://localhost:8081/room',{
             method: 'POST',
             mode: 'cors',
             cache: 'no-cache',
@@ -75,14 +76,15 @@
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({"title": randomBoardName})
+            body: JSON.stringify({"title": randomRoomName})
         });
 
         const responseJson2 = await response2.json();
         roomId = responseJson2.id;
 
         console.log("Board created: " + roomId);
-        document.getElementById('boardId').value = roomId;
+        document.getElementById('roomId').value = roomId;
+        document.getElementById('token').value = accessToken;
     }
 
 
@@ -94,7 +96,7 @@
     }
 
     function connect() {
-        // var socket = new SockJS('http://ecse005002ac.epam.com:8082/websocket/board');
+        // var socket = new SockJS('http://ecse005002ac.epam.com:8081/websocket-room');
         var socket = new SockJS('http://localhost:8081/websocket-room');
         roomId = document.getElementById('roomId').value;
         token = document.getElementById('token').value;
