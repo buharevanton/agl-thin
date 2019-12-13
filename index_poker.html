@@ -102,7 +102,7 @@
         stompClient.connect(null, accessToken, function (frame) {
             setConnected(true);
             console.log('Connected: ' + frame.headers['user-name']);
-            stompClient.subscribe(`/user/user1/topic/websocket/room/${roomId}`);
+            stompClient.subscribe(`/user/topic/websocket/room/${roomId}`);
             stompClient.subscribe(`/topic/websocket/room/${roomId}`);
         });
     }
