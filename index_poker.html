@@ -115,7 +115,7 @@
     // CHANGE_ROOM_SETTINGS;
     function changeRoomSettings() {
         const name = document.getElementById('name').value;
-        stompClient.send(`/app/websocket/room/${roomId}`, {}, JSON.stringify({
+        stompClient.send(`/app/room/${roomId}`, {}, JSON.stringify({
             "action": "CHANGE_ROOM_SETTINGS",
             "parameters": {
                 "commentId": 1,
