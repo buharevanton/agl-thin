@@ -3,7 +3,7 @@
 <head>
     <title>Poker Agiles</title>
     <link rel="shortcut icon" href="favicon.ico">
-<!--    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>-->
+    <!--    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>-->
     <script src="js/sockjs.min.js"></script>
     <script src="js/stomp.js"></script>
     <style>
@@ -20,8 +20,7 @@
 
 <body>
 <noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
-    enabled. Please enable
-    Javascript and reload this page!</h2></noscript>
+    enabled. Please enable Javascript and reload this page!</h2></noscript>
 <div>
     <button id="register" onclick="register();">Register and Create Room</button>
     <hr>
@@ -38,7 +37,7 @@
     <hr>
     <div id="conversationDiv">
         <label></label><input type="hidden" id="name"/>
-        <button id="loadBoard" onclick="loadBoard();">Some Action</button>
+        <button id="loadBoard" onclick="changeRoomSettings();">Change room settings</button>
 
         <p id="response"></p>
     </div>
@@ -46,12 +45,10 @@
 
 <script type="text/javascript">
     let stompClient = null;
-    let accessToken;
-    let roomId;
-    let token;
+    let accessToken, roomId, token;
 
     async function register() {
-        const response = await fetch('http://localhost:8081/temporary-registration',{
+        const response = await fetch('http://localhost:8081/temporary-registration', {
             method: 'POST',
             mode: 'cors',
             cache: 'no-cache',
@@ -67,7 +64,7 @@
         console.log(accessToken);
 
         const randomRoomName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-        const response2 = await fetch('http://localhost:8081/room',{
+        const response2 = await fetch('http://localhost:8081/room', {
             method: 'POST',
             mode: 'cors',
             cache: 'no-cache',
@@ -82,7 +79,7 @@
         const responseJson2 = await response2.json();
         roomId = responseJson2.id;
 
-        console.log("Board created: " + roomId);
+        console.log("Room created: " + roomId);
         document.getElementById('roomId').value = roomId;
         document.getElementById('token').value = accessToken;
     }
@@ -115,7 +112,17 @@
         console.log("Disconnected");
     }
 
-
+    // CHANGE_ROOM_SETTINGS;
+    function changeRoomSettings() {
+        const name = document.getElementById('name').value;
+        stompClient.send(`/app/websocket/room/${roomId}`, {}, JSON.stringify({
+            "action": "CHANGE_ROOM_SETTINGS",
+            "parameters": {
+                "commentId": 1,
+                "text": "updatedText"
+            }
+        }));
+    }
 
 </script>
 </body>
