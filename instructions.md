@@ -1,5 +1,6 @@
 In order to make button "Register and Create Room" work for **Poker** project - 
-place `@CrossOrigin("*")` annotation at:
+place `@CrossOrigin("*")`
+ 
 ```
 public class RoomController {
 ...
@@ -15,4 +16,3 @@ public class TemporaryRegistrationController {
     public ResponseEntity registerTemporaryUser(@RequestBody @Valid TemporaryUser temporaryUser) {
 
 ```  
-
