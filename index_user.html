@@ -13,22 +13,52 @@
             <div class="email-field">
                 <label class="field-label">Email</label>
                 <div class="">
-                    <input maxlength="255" placeholder="" type="text" class="input-field">
+                    <input id="email" value="e@mail" type="text" class="input-field">
                 </div>
             </div>
 
             <div class="password-field">
                 <label class="field-label">Password</label>
-                <div class=""><input maxlength="255" placeholder="" type="text" class="input-field"></div>
+                <div class=""><input id="password" value="password" type="text" class="input-field"></div>
             </div>
 
             <div class="control-buttons">
-                <button class="button sign-up">Sign up</button>
-                <button color="blue" class="button sign-in">Sign in</button>
+                <button class="button sign-up" onclick="signUp();return false;">Sign up</button>
+                <button color="blue" class="button sign-in" onclick="signIn();return false;">Sign in</button>
+            </div>
+
+            <div class="sso">
+                <button>Sign-in with Google</button>
+                <button>Sign-in with Epam</button>
             </div>
         </form>
+
     </div>
 </div>
+<script>
+    function signUp() {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        fetch('http://localhost:8020/signup', {
+            method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "email": email,
+                "password": password
+            })
+        });
+    }
+
+    function signIn() {
+
+    }
+</script>
 
 </body>
 </html>

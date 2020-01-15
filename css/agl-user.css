@@ -71,3 +71,8 @@
 .sign-in {
     background: #39C2D7;
 }
+
+.sso {
+    margin-top: 15px;
+    text-align-last: justify;
+}
